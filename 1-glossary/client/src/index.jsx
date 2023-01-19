@@ -1,9 +1,6 @@
 import React from "react";
-import { render } from "react-dom";
+import * as ReactDOM from "react-dom";
+import App from "./components/App.jsx";
+const soliciter = require('./soliciter.js');
 
-render(
-  <div>
-    <p>Hello, World!</p>
-  </div>,
-  document.getElementById("root")
-);
+ReactDOM.render(<App soliciter={soliciter} />, document.getElementById('root'));
