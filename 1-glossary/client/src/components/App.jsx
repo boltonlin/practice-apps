@@ -3,10 +3,23 @@ import AddWordForm from './AddWordForm.jsx';
 import SearchForm from './SearchForm.jsx';
 import TermList from './TermList.jsx';
 
-const App = () => {
+const App = ({
+  soliciter
+}) => {
+
+  const [filteredTermList, setFilteredTermList] = useState([]);
+
+  useEffect(() => {
+    soliciter.get()
+      .then(results => {
+        setFilteredTermList(results.data);
+      });
+  }, []);
+
   return (
     <div>
-      <p>Hello World!</p>
+      <h1>Glossary</h1>
+      <TermList terms={filteredTermList} />
     </div>
   )
 }
