@@ -25,24 +25,38 @@ module.exports = {
 
   retrieveTerm: function (query) {
     const { word, partOfSpeech } = query;
-    if (!partOfSpeech) return Term.find({ word }).exec();
+    if (!word) return Term.find({}).exec();
+    else if (!partOfSpeech) return Term.find({ word }).exec();
     else return Term.findOne({ word, partOfSpeech }).exec();
   },
 
+  // either changing the definitions or changing the word and pos
   updateTerm: function (term) {
-    const { word, partOfSpeech, definitions } = term;
-    return Term.findOne({ word, partOfSpeech }).exec()
-      .then(foundTerm => {
-        if (!foundTerm) return false;
+    const { _id, word, partOfSpeech, definitions } = term;
+    if (!definitions) {
+      return Term.findOne({ _id }).exec()
+        .then(foundTerm => {
+          if (!foundTerm) return false;
           else {
-            for (let definition of definitions) {
-              if (!foundTerm.definitions.includes(definition))
-                foundTerm.definitions.push(definition);
-            }
+            if (word) foundTerm.word = word;
+            if (partOfSpeech) foundTerm.partOfSpeech = partOfSpeech;
             return foundTerm.save();
           }
-      })
-      .catch((err) => console.log(err));
+        })
+    } else {
+      return Term.findOne({ word, partOfSpeech }).exec()
+        .then(foundTerm => {
+          if (!foundTerm) return false;
+            else {
+              for (let definition of definitions) {
+                if (!foundTerm.definitions.includes(definition))
+                  foundTerm.definitions.push(definition);
+              }
+              return foundTerm.save();
+            }
+        })
+        .catch((err) => console.log(err));
+    }
   },
 
   deleteTerm: function (term) {
