@@ -7,7 +7,7 @@ mongoose.connect(`mongodb://localhost/${process.env.DB_NAME}`)
 const termSchema = mongoose.Schema({
   word:         String,
   partOfSpeech: String,
-  definitions:   [String],
+  definitions:  [String],
 });
 
 const Term = mongoose.model('Term', termSchema);
@@ -62,3 +62,5 @@ module.exports = {
       .catch(err => console.log(err));
   }
 };
+
+module.exports.Term = Term;
