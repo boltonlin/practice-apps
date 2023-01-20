@@ -3,14 +3,16 @@ import Term from './Term.jsx';
 
 const TermList = ({
   terms,
-  handleEdit
+  handleEdit,
+  handleDelete
 }) => (
   <ul>
     {terms.map(term => (
       <Term
         term={term}
         key={term._id}
-        handleEdit={handleEdit} />
+        handleEdit={handleEdit}
+        handleDelete={handleDelete} />
     ))}
   </ul>
 );{}

@@ -21,15 +21,9 @@ module.exports = {
   },
 
   delete: function (req, res) {
-    const { word, partOfSpeech, index } = req.query;
-    if (index === null | undefined) {
-      db.deleteTerm({ word, partOfSpeech })
-        .then(res.sendStatus.bind(res, 200))
-        .catch(err => res.status(400).send(err));
-    } else {
-      db.deleteDefinition(req.query)
-        .then(res.sendStatus.bind(res, 200))
-        .catch(err => res.status(400).send(err));
-    }
+    const { _id } = req.query;
+    db.deleteTerm({ _id })
+      .then(res.sendStatus.bind(res, 200))
+      .catch(err => res.status(400).send(err));
   },
 }

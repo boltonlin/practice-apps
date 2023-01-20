@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 const Term = ({
   term,
-  handleEdit
+  handleEdit,
+  handleDelete
 }) => {
 
   const [status, setStatus] = useState(false);
@@ -10,7 +11,7 @@ const Term = ({
     _id: term._id,
     word: term.word,
     partOfSpeech: term.partOfSpeech,
-    definitions: term.definitions
+    definitions: [...term.definitions] /* YOU CANNOT JUST SET THE ARRAY */
   });
 
   const handleChanges = (e, property, index) => {
@@ -24,7 +25,7 @@ const Term = ({
   }
 
   const addDefinitionButton = (index) => {
-    if (index === changes.definitions.length - 1) {
+    if (index === changes.definitions.length - 1 || !changes.definitions.length) {
       return (
         <button type="button" onClick={addDefinition}>➕</button>
       )
@@ -41,6 +42,10 @@ const Term = ({
     let copy = {...changes};
     copy.definitions.splice(index, 1);
     setChanges(copy);
+  }
+
+  const deleteTerm = () => {
+    handleDelete(term._id);
   }
 
   const saveChanges = () => {
@@ -78,10 +83,12 @@ const Term = ({
             {addDefinitionButton(index)}
             </div>
           ))}
+          {addDefinitionButton()}
         </div>
         <div className="control-panel">
           <button type="button" onClick={saveChanges}>💾</button>
           <button type="button" onClick={revert}>🔙</button>
+          <button type="button" onClick={deleteTerm}>❌</button>
         </div>
         </>
       :

@@ -28,11 +28,11 @@ module.exports = {
     })
   },
 
-  removeTerm: function () {
-
-  },
-
-  removeDefinition: function () {
-
-  },
+  removeTerm: function (_id) {
+    return axios({
+      url: baseEndpoint,
+      method: 'delete',
+      params: { _id }
+    })
+  }
 }

@@ -21,17 +21,25 @@ const App = ({
   }
 
   const addWord = (term) => {
-    soliciter.save(term)
+    return soliciter.save(term)
       .then(fetchAllTerms);
   }
 
   const editTerm = (term) => {
-    soliciter.update(term)
+    return soliciter.update(term)
+      .then((results) => {
+        console.log(results);
+        return fetchAllTerms();
+      });
+  }
+
+  const deleteTerm = (_id) => {
+    return soliciter.removeTerm(_id)
       .then(fetchAllTerms);
   }
 
   const fetchAllTerms = () => {
-    soliciter.get()
+    return soliciter.get()
       .then(results => setFilteredTermList(results.data));
   }
 
@@ -50,7 +58,8 @@ const App = ({
         handleSubmit={addWord} />
       <TermList
         terms={filteredTermList}
-        handleEdit={editTerm} />
+        handleEdit={editTerm}
+        handleDelete={deleteTerm} />
     </div>
   )
 }
