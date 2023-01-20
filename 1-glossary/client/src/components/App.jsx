@@ -25,6 +25,11 @@ const App = ({
       .then(fetchAllTerms);
   }
 
+  const editTerm = (term) => {
+    soliciter.update(term)
+      .then(fetchAllTerms);
+  }
+
   const fetchAllTerms = () => {
     soliciter.get()
       .then(results => setFilteredTermList(results.data));
@@ -44,7 +49,8 @@ const App = ({
       <AddTermForm
         handleSubmit={addWord} />
       <TermList
-        terms={filteredTermList} />
+        terms={filteredTermList}
+        handleEdit={editTerm} />
     </div>
   )
 }

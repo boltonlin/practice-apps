@@ -32,31 +32,25 @@ module.exports = {
 
   // either changing the definitions or changing the word and pos
   updateTerm: function (term) {
-    const { _id, word, partOfSpeech, definitions } = term;
-    if (!definitions) {
-      return Term.findOne({ _id }).exec()
-        .then(foundTerm => {
-          if (!foundTerm) return false;
-          else {
-            if (word) foundTerm.word = word;
-            if (partOfSpeech) foundTerm.partOfSpeech = partOfSpeech;
-            return foundTerm.save();
+    const { word, partOfSpeech, definitions } = term;
+    const _id = mongoose.Types.ObjectId(term._id);
+    return Term.findOne({ _id }).exec()
+      .then(foundTerm => {
+        if (!foundTerm) return false;
+        else {
+          if (word) foundTerm.word = word;
+          if (partOfSpeech) foundTerm.partOfSpeech = partOfSpeech;
+          for (let index in definitions) {
+            foundTerm.definitions[index] = definitions[index];
           }
-        })
-    } else {
-      return Term.findOne({ word, partOfSpeech }).exec()
-        .then(foundTerm => {
-          if (!foundTerm) return false;
-            else {
-              for (let definition of definitions) {
-                if (!foundTerm.definitions.includes(definition))
-                  foundTerm.definitions.push(definition);
-              }
-              return foundTerm.save();
+          if (definitions.length > foundTerm.definitions.length) {
+            for (let i = foundTerm.definitions.length - 1; i < definitions.length; i++){
+              foundTerm.definitions.push(definitions[i]);
             }
-        })
-        .catch((err) => console.log(err));
-    }
+          }
+          return foundTerm.save();
+        }
+      })
   },
 
   deleteTerm: function (term) {

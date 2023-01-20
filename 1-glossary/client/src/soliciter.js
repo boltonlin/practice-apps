@@ -20,8 +20,12 @@ module.exports = {
     }
   },
 
-  changeDefinition: function () {
-
+  update: function (term) {
+    return axios({
+      url: baseEndpoint,
+      method: 'patch',
+      data: term
+    })
   },
 
   removeTerm: function () {
