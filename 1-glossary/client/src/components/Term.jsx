@@ -59,8 +59,7 @@ const Term = ({
   }
 
   return (
-    <li>
-      <div className="term">
+    <li className="term">
       {status?
         <>
         <input
@@ -106,8 +105,7 @@ const Term = ({
         <div className="control-panel">
           <button type="button" onClick={() => setStatus(true)}>📝</button>
         </div>
-        </>}
-      </div>
+      </>}
     </li>
   );
 }

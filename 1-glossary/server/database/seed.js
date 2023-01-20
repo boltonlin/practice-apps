@@ -12,7 +12,7 @@ const Term = require("./db").Term;
 
 const seedTerms = [
   {
-    "word": "SEED_example",
+    "word": "example",
     "partOfSpeech": "noun",
     "definitions": [
       "one that serves as a pattern to be imitated or not to be imitated",
@@ -21,7 +21,7 @@ const seedTerms = [
     ]
   },
   {
-    "word": "SEED_example",
+    "word": "example",
     "partOfSpeech": "verb",
     "definitions": [
       "to serve as an example of",
@@ -29,14 +29,14 @@ const seedTerms = [
     ]
   },
   {
-    "word": "SEED_sitzmark",
+    "word": "sitzmark",
     "partOfSpeech": "noun",
     "definitions": [
       "a sunken area in the snow marking a backward fall of a skier."
     ]
   },
   {
-    "word": "SEED_woke",
+    "word": "woke",
     "partOfSpeech": "adjective",
     "definitions": [
       "aware of and actively attentive to important societal facts and issues (especially issues of racial and social justice)",
@@ -44,7 +44,7 @@ const seedTerms = [
     ]
   },
   {
-    "word": "SEED_propaganda",
+    "word": "propaganda",
     "partOfSpeech": "noun",
     "definitions": [
       "capitalized : a congregation of the Roman curia having jurisdiction over missionary territories and related institutions",
@@ -53,7 +53,7 @@ const seedTerms = [
     ]
   },
   {
-    "word": "SEED_apothecary",
+    "word": "apothecary",
     "partOfSpeech": "noun",
     "definitions": [
       "one who prepares and sells drugs or compounds for medicinal purposes",
