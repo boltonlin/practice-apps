@@ -79,11 +79,15 @@ const _parametize = function (arr, wantWrap) {
 const _generateAssignment = function(obj, ignore) {
   let assignment = Object.keys(obj).reduce(
     (acc, key, index) => {
-      let str = `${key} = '${obj[key]}'`
-      if (index < (Object.keys(obj).length - 1))
+      let str = '';
+      if (index > 0 && acc !== '')
         str += ', '
+      if (!Number.isInteger(obj[key]))
+        str += `${key} = '${obj[key]}'`;
+      else
+        str += `${key} = ${obj[key]}`;
       if (key !== ignore) return acc + str;
-      else return '';
+      else return acc;
     }, '')
   return assignment;
 }
@@ -104,8 +108,25 @@ Object.assign(db, {
 
   update: function (type, payload) {
     let assignment = _generateAssignment(payload, KEYS[type])
-    let sql = `UPDATE ${type} SET ${assignment}
-      WHERE ${KEYS[type]} = '${payload[KEYS[type]]}'`
+    let filter = `'${payload[KEYS[type]]}'`;
+    if (KEYS[type] === 'user_id')
+      filter = `${payload[KEYS[type]]}`;
+    let sql = `UPDATE ${type} SET ${assignment} WHERE ${KEYS[type]} = ${filter}`
+    return db.queryAsync(sql);
+  },
+
+  createSession: function (session_id, user_id) {
+    let sql = `INSERT INTO session (id, user_id) VALUES ('${session_id}', ${user_id})`
+    return db.queryAsync(sql);
+  },
+
+  findSession: function (session_id) {
+    let sql = `SELECT user_id FROM session WHERE id='${session_id}'`;
+    return db.queryAsync(sql);
+  },
+
+  clearSession: function (session_id) {
+    let sql = `DELETE FROM session WHERE id=${session_id}`;
     return db.queryAsync(sql);
   }
 })
