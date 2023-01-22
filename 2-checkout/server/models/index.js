@@ -59,8 +59,8 @@ db.connectAsync()
 const KEYS = {
   'user': 'account',
   'session': 'id',
-  'address': 'user_id',
-  'payment': 'user_id'
+  'address': 'id',
+  'payment': 'id'
 }
 
 const _parametize = function (arr, wantWrap) {
@@ -99,6 +99,11 @@ Object.assign(db, {
     return db.queryAsync(sql, inserts);
   },
 
+  findByUserId: function (type, payload) {
+    let sql = `SELECT * FROM ${type} WHERE user_id=${payload.user_id}`;
+    return db.queryAsync(sql);
+  },
+
   insert: function (type, payload) {
     let keys = _parametize(Object.keys(payload), false);
     let values = _parametize(Object.values(payload), true);
@@ -116,6 +121,7 @@ Object.assign(db, {
   },
 
   createSession: function (session_id, user_id) {
+    console.log(session_id, user_id);
     let sql = `INSERT INTO session (id, user_id) VALUES ('${session_id}', ${user_id})`
     return db.queryAsync(sql);
   },
@@ -127,6 +133,16 @@ Object.assign(db, {
 
   clearSession: function (session_id) {
     let sql = `DELETE FROM session WHERE id=${session_id}`;
+    return db.queryAsync(sql);
+  },
+
+  clearSessionByUserId: function (user_id) {
+    let sql = `DELETE FROM session WHERE user_id=${user_id}`;
+    return db.queryAsync(sql);
+  },
+
+  matchUser: function (account, attempt) {
+    let sql = `SELECT * FROM user WHERE (account='${account}' && password='${attempt}')`;
     return db.queryAsync(sql);
   }
 })
