@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Auth from './Auth.jsx';
+import Checkout from './Checkout.jsx';
 
 const App = ({
   soliciter
@@ -30,6 +31,12 @@ const App = ({
     return (
       <Auth soliciter={soliciter} done={() => setPage('index')} />
     );
+  }
+
+  const checkoutForm = () => {
+    return (
+      <Checkout soliciter={soliciter} done={() => setPage('index')} />
+    )
   }
 
   const index = () => {
@@ -82,7 +89,7 @@ const App = ({
       </div>
       {page === 'index' && index()}
       {page === 'auth' && authForm()}
-      {page === 'checkout' && <div>checkout wow</div>}
+      {page === 'checkout' && checkoutForm()}
     </div>
   );
 };

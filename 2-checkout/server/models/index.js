@@ -103,9 +103,6 @@ Object.assign(db, {
     let select = type === 'user'? 'account, email' : '*';
     let sql = `SELECT ${select} FROM ?? WHERE ??=?`;
     var inserts = [type, KEYS[type], payload[KEYS[type]]];
-    console.log(sql);
-    console.log(KEYS[type]);
-    console.log(payload[KEYS[type]]);
     return db.queryAsync(sql, inserts);
   },
 

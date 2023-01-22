@@ -18,10 +18,11 @@ const Auth = ({
     soliciter
       .login(info)
       .then(results => {
-        if (results.status === 201)
-          done();
-        resetInfo();
-        alert('Invalid login');
+        if (results.status !== 201) {
+          resetInfo();
+          alert('Invalid login');
+        }
+        done();
       });
   }
 
