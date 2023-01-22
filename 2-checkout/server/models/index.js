@@ -100,9 +100,12 @@ const _generateAssignment = function(obj, ignore) {
 
 Object.assign(db, {
   find: function (type, payload) {
-    let select = type === 'user'? '(account, email)' : '*';
+    let select = type === 'user'? 'account, email' : '*';
     let sql = `SELECT ${select} FROM ?? WHERE ??=?`;
     var inserts = [type, KEYS[type], payload[KEYS[type]]];
+    console.log(sql);
+    console.log(KEYS[type]);
+    console.log(payload[KEYS[type]]);
     return db.queryAsync(sql, inserts);
   },
 
@@ -140,7 +143,7 @@ Object.assign(db, {
   },
 
   clearSession: function (session_id) {
-    let sql = `DELETE FROM session WHERE id=${session_id}`;
+    let sql = `DELETE FROM session WHERE id='${session_id}'`;
     return db.queryAsync(sql);
   },
 

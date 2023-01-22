@@ -9,11 +9,13 @@ module.exports = {
         return db
           .find(type, payload)
           .then(found => {
+            console.log(found);
             if (!found[0].length) return db.insert(type, payload);
             else return db.update(type, payload);
           })
           .then(results => {
             if (results[0].insertId > 0) {
+              res.cookie('auth', 'true');
               return db.createSession(req.session_id, results[0].insertId);
             } else return null;
           })
@@ -51,6 +53,22 @@ module.exports = {
       .then(results => res.status(200).send(results[0]));
   },
 
+  checkStatus: function (req, res) {
+    return db
+      .findSession(req.session_id)
+      .then(results => {
+        if (results[0].length) res.status(200).send(true);
+        else {
+          res.cookie('auth', 'false');
+          res.status(200).send(false);
+        }
+      })
+      .catch(err => {
+        console.log('checkStatus error', err);
+        res.sendStatus(400);
+      });
+  },
+
   login: function (req, res) {
     const { account, password: attempt } = req.body;
     let user_id;
@@ -61,13 +79,22 @@ module.exports = {
         user_id = results[0][0].id;
         return db.clearSessionByUserId(user_id);
       })
-      .then(() => db.createSession(req.session_id, user_id))
+      .then(() => {
+        res.cookie('auth', 'true')
+        return db.createSession(req.session_id, user_id);
+      })
       .then(res.sendStatus.bind(res, 201))
       .catch(err => res.status(400).send(err));
   },
 
   logout: function (req, res) {
-    return db.clearSession(req.session_id);
+    res.cookie('auth', 'false');
+    return db.clearSession(req.session_id)
+      .then(results => {
+        if (!results[0].affectedRows) res.sendStatus(400);
+        res.sendStatus(201);
+      })
+      .catch(err => res.status(400).send(err));
   }
 
 }
