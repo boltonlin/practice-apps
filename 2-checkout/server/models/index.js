@@ -61,7 +61,13 @@ const KEYS = {
   'session': 'id',
   'address': 'id',
   'payment': 'id'
-}
+};
+
+const BELONGINGS = {
+  'user': 'email',
+  'address': 'address1, address2, city, state, zipcode, phone',
+  'payment': 'creditcard, expirydate, cvv, zipcode',
+};
 
 const _parametize = function (arr, wantWrap) {
   let result = arr.reduce(
@@ -90,17 +96,20 @@ const _generateAssignment = function(obj, ignore) {
       else return acc;
     }, '')
   return assignment;
-}
+};
 
 Object.assign(db, {
   find: function (type, payload) {
-    let sql = `SELECT * FROM ?? WHERE ??=?`;
+    let select = type === 'user'? '(account, email)' : '*';
+    let sql = `SELECT ${select} FROM ?? WHERE ??=?`;
     var inserts = [type, KEYS[type], payload[KEYS[type]]];
     return db.queryAsync(sql, inserts);
   },
 
-  findByUserId: function (type, payload) {
-    let sql = `SELECT * FROM ${type} WHERE user_id=${payload.user_id}`;
+  findUserBelongings: function (user_id, type) {
+    let select = BELONGINGS[type];
+    let filter = type === 'user' ? `id=${user_id}` : `user_id=${user_id}`
+    let sql = `SELECT ${select} FROM ${type} WHERE (${filter})`;
     return db.queryAsync(sql);
   },
 
@@ -121,7 +130,6 @@ Object.assign(db, {
   },
 
   createSession: function (session_id, user_id) {
-    console.log(session_id, user_id);
     let sql = `INSERT INTO session (id, user_id) VALUES ('${session_id}', ${user_id})`
     return db.queryAsync(sql);
   },

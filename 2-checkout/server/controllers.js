@@ -42,29 +42,13 @@ module.exports = {
   },
 
   fetch: function (req, res) {
-    const { type, payload } = req.body;
-    switch (type) {
-      case 'user':
-        return db
-          .find(type, payload)
-          .then(results => res.status(200).send(results[0]))
-          .catch(err => res.status(400).send(err));
-        break;
-      case 'address':
-      case 'payment':
-        return db
-          .findSession(req.session_id)
-          .then(results => {
-            if (!results[0].length) res.sendStatus(400);
-            payload.user_id = results[0][0].user_id;
-            return db.findByUserId(type, payload);
-          })
-          .then(results => res.status(200).send(results[0]))
-          .catch(err => res.status(400).send(err));
-        break;
-      default:
-        res.sendStatus(201);
-    }
+    return db
+      .findSession(req.session_id)
+      .then(results => {
+        const user_id = results[0][0].user_id;
+        return db.findUserBelongings(user_id, req.query.type);
+      })
+      .then(results => res.status(200).send(results[0]));
   },
 
   login: function (req, res) {
